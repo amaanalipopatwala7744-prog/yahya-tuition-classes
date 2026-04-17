@@ -1,0 +1,24 @@
+{
+  "overview": "A modern, high-converting tuition website for Yahya Personal Tuition Classes in Vadodara. Features a public landing page with courses, timetable, testimonials, and gallery, plus a student management system with attendance tracking, assignments, and test results. Includes an AI chatbot for FAQs and lead collection, WhatsApp integration, and a protected admin panel.",
+  "features": [
+    "Public landing page with hero banner, courses & fees, timetable, testimonials, and gallery",
+    "Student login with dashboard showing attendance, assignments, and test results",
+    "Admin panel to manage students, attendance, assignments, tests, and gallery",
+    "AI chatbot (Yahya AI Assistant) for FAQs, lead collection, and demo class suggestions",
+    "Floating WhatsApp button with pre-filled message",
+    "Responsive blue & white design with sticky navbar",
+    "SEO optimized for Vadodara tuition keywords"
+  ],
+  "category": "education",
+  "tags": [
+    "tuition",
+    "education",
+    "vadodara",
+    "student-management",
+    "attendance",
+    "assignments",
+    "chatbot",
+    "whatsapp"
+  ],
+  "last_updated": "2026-04-17T12:22:59.905Z"
+}

@@ -1,0 +1,171 @@
+// Version: 1.0.0
+type AssignmentId__162244222 = Nat;
+type AssignmentSubmission__593379126 =
+  {
+    assignmentId : AssignmentId__162244222;
+    fileBlob : ExternalBlob__246066408;
+    id : SubmissionId__741433157;
+    status : SubmissionStatus__373353961;
+    studentId : StudentId__585118929;
+    submittedAt : Timestamp__301639476
+  };
+type Assignment__982879838 =
+  {
+    createdAt : Timestamp__301639476;
+    createdBy : Principal;
+    deadline : Timestamp__301639476;
+    description : Text;
+    fileBlob : ?ExternalBlob__246066408;
+    id : AssignmentId__162244222;
+    subject : Text;
+    title : Text
+  };
+type AttendanceId__91187254 = Nat;
+type AttendanceRecord__699091857 =
+  {
+    date : Text;
+    id : AttendanceId__91187254;
+    markedBy : Principal;
+    status : AttendanceStatus__1042496195;
+    studentId : StudentId__585118929
+  };
+type AttendanceStatus__1042496195 = {#absent; #present};
+type ChatbotLead__877146945 =
+  {
+    classInterest : ClassLevel__191290467;
+    createdAt : Timestamp__301639476;
+    followUpStatus : FollowUpStatus__508689728;
+    id : LeadId__1073473045;
+    name : Text;
+    phone : Text;
+    preferredTime : Text
+  };
+type ClassLevel__191290467 = {#class11to12; #class6to8; #class9to10};
+type ClassTest__775073443 =
+  {
+    createdAt : Timestamp__301639476;
+    createdBy : Principal;
+    description : Text;
+    id : TestId__174543168;
+    name : Text;
+    subject : Text;
+    testDate : Timestamp__301639476;
+    totalMarks : Nat
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type ExternalBlob__246066408 = Blob;
+type FollowUpStatus__508689728 = {#contacted; #enrolled; #new_};
+type GalleryCategory__182200630 = {#activities; #classroom; #results};
+type GalleryImage__1001354798 =
+  {
+    category : GalleryCategory__182200630;
+    description : Text;
+    fileBlob : ExternalBlob__246066408;
+    id : ImageId__216201135;
+    title : Text;
+    uploadedAt : Timestamp__301639476
+  };
+type ImageId__216201135 = Nat;
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type LeadId__1073473045 = Nat;
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type ResultId__980923967 = Nat;
+type StudentId__585118929 = Nat;
+type Student__26715999 =
+  {
+    classLevel : ClassLevel__191290467;
+    email : Text;
+    enrollmentDate : Timestamp__301639476;
+    id : StudentId__585118929;
+    isActive : Bool;
+    name : Text;
+    phone : Text;
+    principal : Principal;
+    subjects : [Text]
+  };
+type SubmissionId__741433157 = Nat;
+type SubmissionStatus__373353961 = {#late; #reviewed; #submitted};
+type TestId__174543168 = Nat;
+type TestResult__625886600 =
+  {
+    feedback : ?Text;
+    id : ResultId__980923967;
+    marksObtained : Nat;
+    studentId : StudentId__585118929;
+    testId : TestId__174543168
+  };
+type Timestamp__301639476 = Int;
+type UserRole__1054455867 = {#admin; #guest; #user};
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1054455867>
+    };
+  stable assignments :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Assignment__982879838]];
+      var elementIndex : Nat__490723111
+    };
+  stable attendanceRecords :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?AttendanceRecord__699091857]];
+      var elementIndex : Nat__490723111
+    };
+  stable galleryImages :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?GalleryImage__1001354798]];
+      var elementIndex : Nat__490723111
+    };
+  stable leads :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?ChatbotLead__877146945]];
+      var elementIndex : Nat__490723111
+    };
+  stable nextAssignmentId : {var val : Nat};
+  stable nextAttendanceId : {var val : Nat};
+  stable nextImageId : {var val : Nat};
+  stable nextLeadId : {var val : Nat};
+  stable nextResultId : {var val : Nat};
+  stable nextStudentId : {var val : Nat};
+  stable nextSubmissionId : {var val : Nat};
+  stable nextTestId : {var val : Nat};
+  stable students :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Student__26715999]];
+      var elementIndex : Nat__490723111
+    };
+  stable submissions :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?AssignmentSubmission__593379126]];
+      var elementIndex : Nat__490723111
+    };
+  stable testResults :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?TestResult__625886600]];
+      var elementIndex : Nat__490723111
+    };
+  stable tests :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?ClassTest__775073443]];
+      var elementIndex : Nat__490723111
+    }
+};

@@ -1,0 +1,198 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type Timestamp = int;
+type TestResult = 
+ record {
+   feedback: opt text;
+   id: ResultId;
+   marksObtained: nat;
+   studentId: StudentId;
+   testId: TestId;
+ };
+type TestId = nat;
+type SubmissionStatus = 
+ variant {
+   late;
+   reviewed;
+   submitted;
+ };
+type SubmissionId = nat;
+type StudentId = nat;
+type Student = 
+ record {
+   classLevel: ClassLevel;
+   email: text;
+   enrollmentDate: Timestamp;
+   id: StudentId;
+   isActive: bool;
+   name: text;
+   phone: text;
+   "principal": principal;
+   subjects: vec text;
+ };
+type ResultId = nat;
+type LeadId = nat;
+type ImageId = nat;
+type GalleryImage = 
+ record {
+   category: GalleryCategory;
+   description: text;
+   fileBlob: ExternalBlob;
+   id: ImageId;
+   title: text;
+   uploadedAt: Timestamp;
+ };
+type GalleryCategory = 
+ variant {
+   activities;
+   classroom;
+   results;
+ };
+type FollowUpStatus = 
+ variant {
+   contacted;
+   enrolled;
+   new;
+ };
+type ExternalBlob = blob;
+type ClassTest = 
+ record {
+   createdAt: Timestamp;
+   createdBy: principal;
+   description: text;
+   id: TestId;
+   name: text;
+   subject: text;
+   testDate: Timestamp;
+   totalMarks: nat;
+ };
+type ClassLevel = 
+ variant {
+   class11to12;
+   class6to8;
+   class9to10;
+ };
+type ChatbotLead = 
+ record {
+   classInterest: ClassLevel;
+   createdAt: Timestamp;
+   followUpStatus: FollowUpStatus;
+   id: LeadId;
+   name: text;
+   phone: text;
+   preferredTime: text;
+ };
+type AttendanceStatus = 
+ variant {
+   absent;
+   present;
+ };
+type AttendanceRecord = 
+ record {
+   date: text;
+   id: AttendanceId;
+   markedBy: principal;
+   status: AttendanceStatus;
+   studentId: StudentId;
+ };
+type AttendanceId = nat;
+type AssignmentSubmission = 
+ record {
+   assignmentId: AssignmentId;
+   fileBlob: ExternalBlob;
+   id: SubmissionId;
+   status: SubmissionStatus;
+   studentId: StudentId;
+   submittedAt: Timestamp;
+ };
+type AssignmentId = nat;
+type Assignment = 
+ record {
+   createdAt: Timestamp;
+   createdBy: principal;
+   deadline: Timestamp;
+   description: text;
+   fileBlob: opt ExternalBlob;
+   id: AssignmentId;
+   subject: text;
+   title: text;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControl: () -> ();
+  addGalleryImage: (title: text, description: text, fileBlob: ExternalBlob,
+   category: GalleryCategory) -> (GalleryImage);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  createAssignment: (title: text, subject: text, description: text, deadline:
+   Timestamp, fileBlob: opt ExternalBlob) -> (Assignment);
+  createStudent: ("principal": principal, name: text, classLevel: ClassLevel,
+   subjects: vec text, phone: text, email: text) -> (Student);
+  createTest: (name: text, subject: text, testDate: Timestamp, totalMarks:
+   nat, description: text) -> (ClassTest);
+  deactivateStudent: (id: StudentId) -> (bool);
+  deleteAssignment: (id: AssignmentId) -> (bool);
+  deleteGalleryImage: (id: ImageId) -> (bool);
+  deleteLead: (id: LeadId) -> (bool);
+  deleteTest: (id: TestId) -> (bool);
+  enterTestResult: (testId: TestId, studentId: StudentId, marksObtained: 
+   nat, feedback: opt text) -> (TestResult);
+  getAttendanceByDate: (date: text) -> (vec AttendanceRecord) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getMyAttendance: () -> (vec AttendanceRecord) query;
+  getMyProfile: () -> (opt Student) query;
+  getMySubmissions: () -> (vec AssignmentSubmission) query;
+  getMyTestResults: () -> (vec TestResult) query;
+  getResultsByTest: (testId: TestId) -> (vec TestResult) query;
+  getStudent: (id: StudentId) -> (opt Student) query;
+  getStudentAttendance: (studentId: StudentId) ->
+   (vec AttendanceRecord) query;
+  getSubmissionsByAssignment: (assignmentId: AssignmentId) ->
+   (vec AssignmentSubmission) query;
+  isCallerAdmin: () -> (bool) query;
+  listActiveStudents: () -> (vec Student) query;
+  listAssignments: () -> (vec Assignment) query;
+  listGalleryImages: () -> (vec GalleryImage) query;
+  listGalleryImagesByCategory: (category: GalleryCategory) ->
+   (vec GalleryImage) query;
+  listLeads: () -> (vec ChatbotLead) query;
+  listStudents: () -> (vec Student) query;
+  listTests: () -> (vec ClassTest) query;
+  markAttendance: (studentId: StudentId, date: text, status:
+   AttendanceStatus) -> (AttendanceRecord);
+  submitAssignment: (assignmentId: AssignmentId, fileBlob: ExternalBlob) ->
+   (AssignmentSubmission);
+  submitLead: (name: text, phone: text, classInterest: ClassLevel,
+   preferredTime: text) -> (ChatbotLead);
+  updateAttendance: (id: AttendanceId, status: AttendanceStatus) -> (bool);
+  updateLeadStatus: (id: LeadId, status: FollowUpStatus) -> (bool);
+  updateStudent: (updated: Student) -> (bool);
+  updateSubmissionStatus: (id: SubmissionId, status: SubmissionStatus) ->
+   (bool);
+  updateTestResult: (id: ResultId, marksObtained: nat, feedback: opt text) ->
+   (bool);
+}
